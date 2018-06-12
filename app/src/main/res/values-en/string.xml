@@ -23,6 +23,10 @@
     <string name="fragment_detal_action_update">Update</string>
     <string name="fragment_detal_action_delete">Delete</string>
 
+    <string name="fragment_detail_buy">Buy</string>
+    <string name="fragment_detal_action_refresh">Refresh</string>
+    <string name="fragment_detal_action_add">Add</string>
+
     <string name="notification_title">Item ordered</string>
     <string name="notification_text">The selected item has been ordered and will be shipped during the day.</string>
 

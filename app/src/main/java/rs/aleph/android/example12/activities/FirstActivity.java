@@ -23,10 +23,13 @@ import java.util.ArrayList;
 
 import rs.aleph.android.example12.R;
 import rs.aleph.android.example12.adapters.DrawerAdapter;
+import rs.aleph.android.example12.async.SimpleSyncTask;
 import rs.aleph.android.example12.dialogs.AboutDialog;
 import rs.aleph.android.example12.fragments.DetailFragment;
 import rs.aleph.android.example12.fragments.ListFragment;
 import rs.aleph.android.example12.model.NavigationItem;
+import rs.aleph.android.example12.async.SimpleSyncTask;
+
 
 
 // Each activity extends Activity class
@@ -147,7 +150,7 @@ public class FirstActivity extends AppCompatActivity implements ListFragment.OnI
         itemId = 0;
     }
 
-    @Override
+
     public void onItemSelected(int id) {
 
         itemId = id;
@@ -201,17 +204,21 @@ public class FirstActivity extends AppCompatActivity implements ListFragment.OnI
     }
 
     // onOptionsItemSelected method is called whenever an item in the Toolbar is selected.
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                Toast.makeText(FirstActivity.this, "Sinhronizacija pokrenuta u pozadini niti. dobro :)",Toast.LENGTH_SHORT).show();
+                new SimpleSyncTask(FirstActivity.this).execute();
+                break;
             case R.id.action_create:
-                Toast.makeText(this, "Action " + getString(R.string.fragment_master_action_create) + " executed.", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.action_update:
-                Toast.makeText(this, "Action " + getString(R.string.fragment_detal_action_update) + " executed.", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.action_delete:
-                Toast.makeText(this, "Action " + getString(R.string.fragment_detal_action_delete) + " executed.", Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(FirstActivity.this, "Sinhronizacija pokrenuta u glavnoj niti. Nije dobro :(",Toast.LENGTH_SHORT).show();
+                    Thread.sleep(6000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
 
@@ -224,6 +231,12 @@ public class FirstActivity extends AppCompatActivity implements ListFragment.OnI
         getSupportActionBar().setTitle(title);
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
 
 
     // Method(s) that manage NavigationDrawer.
